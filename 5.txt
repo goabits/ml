@@ -1,0 +1,119 @@
+activitymain.xml:
+---------------------------------------------
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ xmlns:app="http://schemas.android.com/apk/res-auto"
+ xmlns:tools="http://schemas.android.com/tools"
+ android:layout_width="match_parent"
+ android:layout_height="match_parent"
+ tools:context="com.example.smsemailphone.MainActivity">
+ <TextView
+ android:id="@+id/textView1"
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="Sending SMS Example"
+ android:layout_alignParentTop="true"
+ android:layout_centerHorizontal="true"
+ android:textSize="30dp" />
+ <Button
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="Send Sms"
+ android:id="@+id/btnSendSMS"
+ android:layout_centerHorizontal="true"
+ android:layout_marginTop="48dp" />
+ <Button
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="Send Email"
+ android:id="@+id/btnSendEmail"
+ android:layout_below="@+id/btnSendSMS"
+ android:layout_centerHorizontal="true"
+ android:layout_marginTop="48dp" />
+ <Button
+ android:layout_width="wrap_content"
+ android:layout_height="wrap_content"
+ android:text="Phone"
+ android:id="@+id/btnDialPhone"
+ android:layout_marginTop="54dp" />
+</RelativeLayout>
+
+
+MainActivity:
+-------------------------------------------------------------------------------------
+package com.example.fifthprogram;
+
+import androidx.appcompat.app.AppCompatActivity;
+import android.widget.Button;
+import android.widget.Toast;
+import android.net.Uri;
+import android.view.View;
+import android.content.Intent;
+
+import android.os.Bundle;
+
+public class MainActivity extends AppCompatActivity {
+    Button sendBtn, emailBtn, phoneBtn;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        sendBtn = findViewById(R.id.btnSendSMS);
+        emailBtn = findViewById(R.id.btnSendEmail);
+        phoneBtn = findViewById(R.id.btnDialPhone);
+
+        sendBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                sendSMSMessage();
+            }
+        });
+        emailBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                sendEmail();
+            }
+        });
+        phoneBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                PhoneDial();
+            }
+        });
+    }
+
+    protected void sendEmail()
+    {
+        String recipients[] = {"123.com", "567@gmail.com"};
+        String subject = "Test Email";
+        String body = "Hope i pass";
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setData(Uri.parse("mailto:"));
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, recipients);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, body);
+        startActivity(emailIntent);
+    }
+
+    protected void sendSMSMessage(){
+        String phoneNo = "1234567890";
+        String message = "Random Shit";
+        Intent smsIntent = new Intent(Intent.ACTION_VIEW);
+        smsIntent.setData(Uri.parse("smsto:" + phoneNo));
+        smsIntent.putExtra("sms_body", message);
+        startActivity(smsIntent);
+        Toast.makeText(getApplicationContext(), "SMS sent.",
+                Toast.LENGTH_LONG).show();
+    }
+
+    protected void PhoneDial()
+    {
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        startActivity(intent);
+    }
+
+}
+
